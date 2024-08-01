@@ -24,30 +24,49 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const CreateTest = () => {
-  const [testTitle, setTestTitle] = useState('');
+  const [testName, setTestName] = useState('');
+  const [testId, setTestId] = useState('');
+  const [accessCode, setAccessCode] = useState('');
+  const [timeLimit, setTimeLimit] = useState('');
   const [questions, setQuestions] = useState([
-    { question: '', type: 'mcq', options: [''] },
+    { question: '', type: 'mcq', options: [''], testCases: [], codeExplanation: '' },
   ]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle test creation logic
     const testData = {
-      title: testTitle,
+      name: testName,
+      id: testId,
+      accessCode: accessCode,
+      timeLimit: parseInt(timeLimit, 10),
       questions,
     };
     console.log('Test Data:', testData);
+    // Here you would typically send this data to your backend
   };
 
-  const handleQuestionChange = (index, value) => {
+  const handleQuestionChange = (index, field, value) => {
     const newQuestions = [...questions];
-    newQuestions[index].question = value;
+    newQuestions[index][field] = value;
     setQuestions(newQuestions);
   };
 
   const handleTypeChange = (index, value) => {
     const newQuestions = [...questions];
     newQuestions[index].type = value;
+    if (value === 'mcq') {
+      newQuestions[index].options = [''];
+      newQuestions[index].testCases = [];
+      newQuestions[index].codeExplanation = '';
+    } else if (value === 'coding') {
+      newQuestions[index].options = [];
+      newQuestions[index].testCases = [{ input: '', output: '' }];
+      newQuestions[index].codeExplanation = '';
+    } else {
+      newQuestions[index].options = [];
+      newQuestions[index].testCases = [];
+      newQuestions[index].codeExplanation = '';
+    }
     setQuestions(newQuestions);
   };
 
@@ -69,8 +88,26 @@ const CreateTest = () => {
     setQuestions(newQuestions);
   };
 
+  const addTestCase = (questionIndex) => {
+    const newQuestions = [...questions];
+    newQuestions[questionIndex].testCases.push({ input: '', output: '' });
+    setQuestions(newQuestions);
+  };
+
+  const handleTestCaseChange = (questionIndex, testCaseIndex, field, value) => {
+    const newQuestions = [...questions];
+    newQuestions[questionIndex].testCases[testCaseIndex][field] = value;
+    setQuestions(newQuestions);
+  };
+
+  const removeTestCase = (questionIndex, testCaseIndex) => {
+    const newQuestions = [...questions];
+    newQuestions[questionIndex].testCases.splice(testCaseIndex, 1);
+    setQuestions(newQuestions);
+  };
+
   const addQuestion = () => {
-    setQuestions([...questions, { question: '', type: 'mcq', options: [''] }]);
+    setQuestions([...questions, { question: '', type: 'mcq', options: [''], testCases: [], codeExplanation: '' }]);
   };
 
   const removeQuestion = (index) => {
@@ -90,14 +127,42 @@ const CreateTest = () => {
           <TextField
             fullWidth
             margin="normal"
-            label="Test Title"
+            label="Test Name"
             variant="outlined"
-            value={testTitle}
-            onChange={(e) => setTestTitle(e.target.value)}
+            value={testName}
+            onChange={(e) => setTestName(e.target.value)}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Test ID"
+            variant="outlined"
+            value={testId}
+            onChange={(e) => setTestId(e.target.value)}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Access Code"
+            variant="outlined"
+            value={accessCode}
+            onChange={(e) => setAccessCode(e.target.value)}
+            required
+          />
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Time Limit (in minutes)"
+            variant="outlined"
+            type="number"
+            value={timeLimit}
+            onChange={(e) => setTimeLimit(e.target.value)}
             required
           />
           {questions.map((question, questionIndex) => (
-            <div key={questionIndex}>
+            <Box key={questionIndex} mb={4}>
               <Grid container spacing={2}>
                 <Grid item xs={8}>
                   <TextField
@@ -106,7 +171,7 @@ const CreateTest = () => {
                     label={`Question ${questionIndex + 1}`}
                     variant="outlined"
                     value={question.question}
-                    onChange={(e) => handleQuestionChange(questionIndex, e.target.value)}
+                    onChange={(e) => handleQuestionChange(questionIndex, 'question', e.target.value)}
                     required
                   />
                 </Grid>
@@ -134,6 +199,7 @@ const CreateTest = () => {
                   </IconButton>
                 </Grid>
               </Grid>
+
               {question.type === 'mcq' && question.options.map((option, optionIndex) => (
                 <Grid container spacing={2} key={optionIndex}>
                   <Grid item xs={10}>
@@ -158,6 +224,7 @@ const CreateTest = () => {
                   </Grid>
                 </Grid>
               ))}
+
               {question.type === 'mcq' && (
                 <Box textAlign="center" my={1}>
                   <Button
@@ -170,7 +237,70 @@ const CreateTest = () => {
                   </Button>
                 </Box>
               )}
-            </div>
+
+              {question.type === 'coding' && (
+                <>
+                  <Typography variant="h6" gutterBottom>
+                    Test Cases
+                  </Typography>
+                  {question.testCases.map((testCase, testCaseIndex) => (
+                    <Grid container spacing={2} key={testCaseIndex}>
+                      <Grid item xs={5}>
+                        <TextField
+                          fullWidth
+                          margin="normal"
+                          label="Input"
+                          variant="outlined"
+                          value={testCase.input}
+                          onChange={(e) => handleTestCaseChange(questionIndex, testCaseIndex, 'input', e.target.value)}
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={5}>
+                        <TextField
+                          fullWidth
+                          margin="normal"
+                          label="Expected Output"
+                          variant="outlined"
+                          value={testCase.output}
+                          onChange={(e) => handleTestCaseChange(questionIndex, testCaseIndex, 'output', e.target.value)}
+                          required
+                        />
+                      </Grid>
+                      <Grid item xs={2}>
+                        <IconButton
+                          color="secondary"
+                          onClick={() => removeTestCase(questionIndex, testCaseIndex)}
+                          aria-label="delete test case"
+                        >
+                          <Delete />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
+                  ))}
+                  <Box textAlign="center" my={1}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => addTestCase(questionIndex)}
+                      startIcon={<Add />}
+                    >
+                      Add Test Case
+                    </Button>
+                  </Box>
+                  <TextField
+                    fullWidth
+                    margin="normal"
+                    label="Code Explanation"
+                    variant="outlined"
+                    multiline
+                    rows={4}
+                    value={question.codeExplanation}
+                    onChange={(e) => handleQuestionChange(questionIndex, 'codeExplanation', e.target.value)}
+                  />
+                </>
+              )}
+            </Box>
           ))}
           <Box textAlign="center" my={2}>
             <Button

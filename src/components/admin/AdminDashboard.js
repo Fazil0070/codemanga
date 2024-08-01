@@ -88,8 +88,8 @@ const AdminDashboard = () => {
       link: '/admin/upload-video',
     },
     {
-      title: 'Create Aptitude Test',
-      description: 'Design and publish aptitude tests for students.',
+      title: 'Create Test',
+      description: 'Design and publish tests for students.',
       icon: QuizIcon,
       link: '/admin/create-test',
     },
