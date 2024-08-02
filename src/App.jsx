@@ -1,4 +1,4 @@
-// src/App.js
+// src/App.jsx
 
 import React from 'react';
 import { Container } from '@mui/material';

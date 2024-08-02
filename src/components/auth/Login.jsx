@@ -134,7 +134,7 @@ const Login = () => {
             </Button>
             <Typography variant="body2" align="center">
               Don't have an account?{' '}
-              <Link href="/register" variant="body2" color="primary">
+              <Link href="/src/components/auth/Register" variant="body2" color="primary">
                 Sign up
               </Link>
             </Typography>

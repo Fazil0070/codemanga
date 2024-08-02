@@ -1,4 +1,4 @@
-// src/firebase.js
+// src/firebase.jsx
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
