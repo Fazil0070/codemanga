@@ -25,7 +25,7 @@ const Footer = () => {
         <Grid container spacing={6} justifyContent="space-between">
           <Grid item xs={12} md={4}>
             <Typography variant="h3" gutterBottom fontWeight="bold" sx={{ mb: 4 }}>
-              Learn<span style={{ color: '#ffeb3b' }}>Spire</span> {/* Changed accent color */}
+              Code<span style={{ color: '#ffeb3b' }}>Manga</span> {/* Changed accent color */}
             </Typography>
             <Typography variant="body1" sx={{ mb: 4, fontSize: '1.1rem' }}>
               Revolutionizing education with cutting-edge technology and personalized learning experiences.
@@ -106,7 +106,7 @@ const Footer = () => {
           }}
         >
           <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>
-            © {new Date().getFullYear()} LearnSpire. All rights reserved.
+            © {new Date().getFullYear()} CodeManga. All rights reserved.
           </Typography>
           <Typography variant="body2" sx={{ fontSize: '0.9rem' }}>
             Privacy Policy | Terms of Service
