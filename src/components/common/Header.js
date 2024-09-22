@@ -84,7 +84,7 @@ const Header = () => {
           <Logo component={Link} to="/">
             <SchoolIcon sx={{ fontSize: 32, marginRight: 1 }} />
             <Typography variant="h5" component="div" sx={{ fontWeight: 700 }}>
-              LearnSpire
+              CodeManga
             </Typography>
           </Logo>
           {isMobile ? (
